@@ -30,4 +30,14 @@ public class NBTUtils {
 		sanityCheck(stack);
 		stack.stackTagCompound.setInteger(string, n);
 	}
+
+	public static String getString(String string, ItemStack stack) {
+		sanityCheck(stack);
+		return stack.stackTagCompound.getString(string);
+	}
+
+	public static void setString(String string, ItemStack stack, String label) {
+		sanityCheck(stack);
+		stack.stackTagCompound.setString(string, label);
+	}
 }
