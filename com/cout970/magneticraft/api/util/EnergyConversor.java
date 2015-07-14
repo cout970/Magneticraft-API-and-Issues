@@ -1,84 +1,101 @@
 package com.cout970.magneticraft.api.util;
 
+/**
+ * Some Basic Utility to exchange between equivalent forms of energy 
+ * @author Cout970
+ *
+ */
 public class EnergyConversor {
-
-	private static final int RF_W = 100;//conversion from Watts to RF, 1RF = 100W, 1KW = 10RF = 1MJ
-	private static final double RF_KW = 0.1;//1RF = 100W = 0.1 KW
-	private static final double STEAM_KW = 5;//amount of steam equivalent to 1KW
-	private static final int WATER_STEAM = 5;//steam generated from 1mB of water
-	private static final int CALORIE = 100;//100 calories to make 5mB steam from 1mB water 
-	private static final double EU_KW = 0.4;//1EU = 400W = 0.4KW
-	private static final double EU_W = 400;//1EU = 400W
-
-	public static double RFtoW(int rf){
-		return rf*RF_W;
+	
+	//1W = 1J/t
+	private static final double RF_J = 10;			// 1RF = 10J | 1J = 0.1RF
+	private static final double EU_J = 40;			// 1EU = 40J | 1J = 0,025EU
+	private static final double STEAM_J = 20;		// 1mB = 20J | 1J = 0.05mB | 1 Burn tick = 5mB Steam = 100J
+	private static final double CALORIE_J = 0.2;	// 1cal = 0.2J | 1J = 5cal
+	private static final double FUEL_J = 100;		// 1 Burning tick = 100J
+	private static final double WATER_STEAM = 5;	// 1mB of Water = 5mB of Steam | 1mB Steam = 0.2 mB Water
+	private static final double FUEL_CALORIE = 500; // 1 Burning tick = 500 cal | 1cal = 0.002 Burning ticks => 1mB Water == 5mB Steam | Calories needed to boil 1mB of water into 5mB of Steam
+	
+	//RF
+	public static double RFtoW(double rf){
+		return rf*RF_J;
 	}
 	
-	public static double WtoRF(double kw){
-		return kw/RF_W;
+	public static double WtoRF(double w){
+		return w/RF_J;
 	}
 	
-	public static double RFtoKW(int rf){
-		return rf*RF_KW;
+	public static double RFtoCALORIES(double rf) {
+		return WtoCALORIES(RFtoW(rf));
 	}
 	
-	public static double KWtoRF(double kw){
-		return kw/RF_KW;
+	public static double CALORIEStoRF(double cal) {
+		return WtoRF(CALORIEStoW(cal));
 	}
 	
-	public static double CALORIEStoW(double heat){
-		return (heat/CALORIE)*1000;
+	//STEAM
+	public static double WtoSTEAM(double w) {
+		return w/STEAM_J;
 	}
-
-	public static double STEAMtoKW(int steam) {
-		return steam/STEAM_KW;
+	
+	public static double STEAMtoW(double steam) {
+		return steam*STEAM_J;
 	}
-
-	public static double KWtoSTEAM(int kw) {
-		return kw*STEAM_KW;
-	}
-
-	public static double FUELtoCALORIES(int fuel) {
-		return fuel*CALORIE;
-	}
-
+	
 	public static int STEAMtoWATER(int steam) {
-		return steam/WATER_STEAM;
+		return (int)(steam/WATER_STEAM);
 	}
 
 	public static int WATERtoSTEAM(int water) {
-		return water*WATER_STEAM;
+		return (int)(water*WATER_STEAM);
 	}
 
+	//CALORIES
+	public static double CALORIEStoW(double cal){
+		return cal*CALORIE_J;
+	}
+	
+	public static double WtoCALORIES(double w) {
+		return w/CALORIE_J;
+	}
+
+	public static double FUELtoCALORIES(double fuel) {
+		return fuel*FUEL_CALORIE;
+	}
+	
+	public static double CALORIEStoFUEL(double cal) {
+		return cal/FUEL_CALORIE;
+	}
+
+	//heat need to boil an amount of water
 	public static double WATERtoSTEAM_HEAT(int water) {
-		return water*CALORIE;
+		return water*FUEL_CALORIE;
+	}
+	
+	public static double CALORIEStoSTEAM(double cal) {
+		return CALORIEStoWATER(cal)*WATER_STEAM;
+	}
+	
+	//aount of water boiled with this amount of calories
+	public static double CALORIEStoWATER(double cal) {
+		return cal/FUEL_CALORIE;
+	}
+	
+	//EU
+	public static double EUtoW(double eu) {
+		return eu*EU_J;
 	}
 
 	public static double WtoEU(double w) {
-		return w/EU_W;
+		return w/EU_J;
+	}
+	
+	//Railcraft Charge (RC)
+	public static double RCtoW(double rc) {
+		return EUtoW(rc);
 	}
 
-	public static double EUtoW(double eu) {
-		return eu*EU_W;
-	}
-
-	public static double KWtoEU(double eu) {
-		return eu*EU_KW;
-	}
-
-	public static double EUtoKW(double Kw) {
-		return Kw/EU_KW;
-	}
-
-	public static double STEAMtoW(int steam) {
-		return steam*1000/STEAM_KW;
-	}
-
-	public static double WtoCALORIES(double w) {
-		return (w*CALORIE)/1000;
-	}
-
-	public static double CALORIEStoFuel(double heat) {
-		return heat/CALORIE;
+	public static double WtoRC(double rc) {
+		return WtoEU(rc);
 	}
 }

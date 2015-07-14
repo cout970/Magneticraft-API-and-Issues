@@ -6,6 +6,11 @@ import net.minecraft.world.World;
 
 import com.cout970.magneticraft.api.util.BlockInfo;
 
+/**
+ * 
+ * @author Cout970
+ *
+ */
 public interface IThermopileDecay {
 
 	public void onCheck(World w,List<BlockInfo> b,double tempHot,double tempCold);

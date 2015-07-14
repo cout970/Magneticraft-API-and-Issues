@@ -8,8 +8,10 @@ import java.util.Arrays;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 
 import com.cout970.magneticraft.api.computer.IBusConnectable;
+import com.cout970.magneticraft.api.computer.IComputer;
 import com.cout970.magneticraft.api.computer.IFloppyDisk;
 import com.cout970.magneticraft.api.computer.IModuleDiskDrive;
 
@@ -21,6 +23,11 @@ public class ModuleDisckDrive implements IModuleDiskDrive, IBusConnectable{
 	private int regAction = -1;
 	private int address = 2;
 	private int accessTime = 0;
+	private IComputer cpu;
+	
+	public ModuleDisckDrive(IComputer c){
+		cpu = c;
+	}
 
 	@Override
 	public byte[] getRawBuffer() {
@@ -172,11 +179,13 @@ public class ModuleDisckDrive implements IModuleDiskDrive, IBusConnectable{
 
 	@Override
 	public void iterate() {
-		if(accessTime == 0){
+		if(accessTime <= 0){
 			if(regAction != -1 && getDisk() != null){
 				IFloppyDisk drive = (IFloppyDisk)getDisk().getItem();
 				if(regAction != 0){
 					accessTime = drive.getAccessTime(getDisk());
+				}else{
+					regAction = -1;
 				}
 				if(regAction == 1){
 					//copy in the buffer the disk label
@@ -234,5 +243,15 @@ public class ModuleDisckDrive implements IModuleDiskDrive, IBusConnectable{
 		}else{
 			accessTime--;
 		}
+	}
+
+	@Override
+	public String getName() {
+		return "DiskDrive";
+	}
+
+	@Override
+	public TileEntity getParent() {
+		return cpu.getParent();
 	}
 }

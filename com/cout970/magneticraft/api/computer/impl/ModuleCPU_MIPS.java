@@ -6,6 +6,8 @@ import com.cout970.magneticraft.api.computer.IModuleCPU;
 import com.cout970.magneticraft.api.computer.IModuleMemoryController;
 import com.cout970.magneticraft.util.Log;
 
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+
 public class ModuleCPU_MIPS implements IModuleCPU{
 
 	public IModuleMemoryController memory;
@@ -18,7 +20,6 @@ public class ModuleCPU_MIPS implements IModuleCPU{
 	public int regCause = 0;
 	public int regEPC = 0;
 	
-	public boolean waiting = false;
 	public int cpuCicles = -1;
 	
 	public ModuleCPU_MIPS(){}
@@ -38,34 +39,35 @@ public class ModuleCPU_MIPS implements IModuleCPU{
 		memory.clear();
 		regPC = 0x00400000;
 		regStatus = 0x0000FFFF;
-		for(int i = 0;i< 28;i++){
+		regCause = 0;
+		regEPC = 0;
+		for(int i = 0; i < 32; i++){
 			setRegister(i, 0);
 		}
-		setRegister(28, 0x00000000);//gp
-		setRegister(29, 0x7fffeffc);//sp
-		setRegister(30, 0x00000000);//fp
-		setRegister(31, 0x00000000);//ra
 	}
 
 	@Override
 	public void stop() {
 		cpuCicles = -1;
+		memory.writeByte(0, (byte)0);
 	}
 
 	@Override
 	public void iterate() {
 		if(cpuCicles >= 0){
-			cpuCicles += 5000;//Hz = speed * 20
+			cpuCicles += 10000;//Hz = speed * 20
 			
 			if (cpuCicles > 100000){
 				cpuCicles = 100000;
 			}
 			
-			while (cpuCicles > 0 && !waiting){
+			while (cpuCicles > 0){
 				--cpuCicles;
+//				Log.debug("PC: 0x"+Integer.toHexString(regPC));
+//				Log.debug("$k0: 0x"+Integer.toHexString(getRegister(26)));
+//				Log.debug("$k1: "+getRegister(27));
 				executeInsntruction();
 			}
-			waiting = false;
 		}
 	}
 
@@ -148,7 +150,10 @@ public class ModuleCPU_MIPS implements IModuleCPU{
 			break;
 			
 		case 0x8://jr
-			if(getRegister(rs) == -1)return;
+			if(getRegister(rs) == 0 || getRegister(rs) == -1){
+				throwException(4);
+				return;
+			}
 			regPC = getRegister(rs);
 			break;
 		case 0x9://jalr
@@ -429,15 +434,35 @@ public class ModuleCPU_MIPS implements IModuleCPU{
 		throwException(1);
 	}
 	
-	 // 3: syscall, 2: aritmatic, 1: invalid instuction, 0: external 
+	 // 4: invalid addres jump, 3: syscall, 2: aritmatic, 1: invalid instuction, 0: external 
 	public void throwException(int flag){
-		if((regStatus & (flag+1)) == 0){
-			return;
+		if(flag == 3){
+		Log.debug("Exception: "+flag);
+		
+		if(getRegister(30) > getRegister(10)){
+			Log.debug("PC: "+Integer.toHexString(regPC-4));
+			Log.debug("FP: "+Integer.toHexString(getRegister(30)));
+			Log.debug("$t2: "+Integer.toHexString(getRegister(10)));
+			Log.debug("Actual: "+(0x1001014c-getRegister(30)));
+			Log.debug("Needed: "+(0x1001014c-getRegister(10)));
 		}
-		regCause = flag;
-		regEPC = regPC;
-		regStatus <<= 4;
-		regPC = 0x4;
+		Log.debug("");
+		}
+		if(flag == 1){
+			Log.debug("Unknow Instruction: 0x"+Integer.toHexString(memory.readWord(regPC-16)));
+			Log.debug("Unknow Instruction: 0x"+Integer.toHexString(memory.readWord(regPC-12)));
+			Log.debug("Unknow Instruction: 0x"+Integer.toHexString(memory.readWord(regPC-8)));
+			Log.debug("Unknow Instruction: 0x"+Integer.toHexString(memory.readWord(regPC-4)));
+			Log.debug("Unknow Instruction: 0x"+Integer.toHexString(memory.readWord(regPC)));
+		}
+//		
+//		if((regStatus & (flag+1)) == 0){
+//			return;
+//		}
+//		regCause = flag;
+//		regEPC = regPC;
+//		regStatus <<= 4;
+//		regPC = 0x700;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.cout970.magneticraft.api.computer;
 
-import com.cout970.magneticraft.api.util.MgDirection;
+import net.minecraft.tileentity.TileEntity;
+
 
 public interface IBusConnectable {
 
@@ -8,7 +9,10 @@ public interface IBusConnectable {
 	public void setAddress(int address);
 	
 	public boolean isActive();
+	public String getName();
 	
 	public int readByte(int pointer);
 	public void writeByte(int pointer, int data);
+	
+	public TileEntity getParent();
 }

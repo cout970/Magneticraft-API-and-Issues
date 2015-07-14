@@ -8,8 +8,10 @@ import java.util.Arrays;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 
 import com.cout970.magneticraft.api.computer.IBusConnectable;
+import com.cout970.magneticraft.api.computer.IComputer;
 import com.cout970.magneticraft.api.computer.IHardDrive;
 import com.cout970.magneticraft.api.computer.IModuleDiskDrive;
 
@@ -20,6 +22,11 @@ public class ModuleHardDrive implements IModuleDiskDrive, IBusConnectable{
 	private int sector = 0;
 	private int address = 3;
 	private int regAction = -1;
+	private IComputer cpu;
+	
+	public ModuleHardDrive(IComputer c){
+		cpu = c;
+	}
 
 	@Override
 	public byte[] getRawBuffer() {
@@ -227,5 +234,15 @@ public class ModuleHardDrive implements IModuleDiskDrive, IBusConnectable{
 				regAction = -1;
 			}
 		}
+	}
+	
+	@Override
+	public String getName() {
+		return "HardDrive";
+	}
+
+	@Override
+	public TileEntity getParent() {
+		return cpu.getParent();
 	}
 }

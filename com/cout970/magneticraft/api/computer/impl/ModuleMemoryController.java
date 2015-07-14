@@ -1,7 +1,8 @@
 package com.cout970.magneticraft.api.computer.impl;
 
+import java.util.Arrays;
+
 import net.minecraft.nbt.NBTTagCompound;
-import scala.actors.threadpool.Arrays;
 
 import com.cout970.magneticraft.api.computer.IBusConnectable;
 import com.cout970.magneticraft.api.computer.IComputer;
@@ -15,6 +16,7 @@ public class ModuleMemoryController implements IModuleMemoryController {
 	private int size;
 	private int modules;
 	private IComputer compu;
+	private IBusConnectable cache;
 
 	public ModuleMemoryController(int size, boolean little, int modules){
 		this.modules = modules;
@@ -43,13 +45,19 @@ public class ModuleMemoryController implements IModuleMemoryController {
 	}
 
 	public byte readByte(int pos) {
-		pos = getRealAddress(this, pos);
-		if((pos & 0xFFF00000) == 0xFFF00000){
+		
+		if((pos & 0xFF000000) == 0xFF000000){
 			if(getComputer() == null)return 0;
-			IBusConnectable con = ComputerUtils.getBusByAddress(getComputer().getConetedDevices(), (pos & 0x000F0000) >> 16);
-			if(con == null)return 0;
-			return (byte) con.readByte(pos & 0xFFFF);
+			int addr = (pos & 0x00FF0000) >> 16;
+			
+			if(cache == null || cache.getAddress() != addr){
+				cache = ComputerUtils.getBusByAddress(getComputer().getParent(), addr);
+			}
+			if(cache == null)return 0;
+			return (byte) cache.readByte(pos & 0xFFFF);
 		}
+		
+		pos = getRealAddress(this, pos);
 		if (pos < 0 ||pos >= getMemorySize())
 			return 0;
 		
@@ -57,14 +65,20 @@ public class ModuleMemoryController implements IModuleMemoryController {
 	}
 
 	public void writeByte(int pos, byte dato) {
-		pos = getRealAddress(this, pos);
-		if((pos & 0xFFF00000) == 0xFFF00000){
+		
+		if((pos & 0xFF000000) == 0xFF000000){
 			if(getComputer() == null)return;
-			IBusConnectable con = ComputerUtils.getBusByAddress(getComputer().getConetedDevices(), (pos & 0x000F0000) >> 16);
-			if(con == null)return;
-			con.writeByte(pos & 0xFFFF, dato);
+			int addr = (pos & 0x00FF0000) >> 16;
+			
+			if(cache == null || cache.getAddress() != addr || cache.getParent().isInvalid()){
+				cache = ComputerUtils.getBusByAddress(getComputer().getParent(), addr);
+			}
+			if(cache == null)return;
+			cache.writeByte(pos & 0xFFFF, dato);
 			return;
 		}
+		
+		pos = getRealAddress(this, pos);
 		if (pos < 0 || pos >= getMemorySize())
 			return;
 		
@@ -131,13 +145,10 @@ public class ModuleMemoryController implements IModuleMemoryController {
 
 	public static int getRealAddress(IModuleMemoryController ram, int address) {
 		int mask = ComputerUtils.getBitsFromInt(address, 16, 31, false);
-		
-		if(mask == 0x0040)return (address - 0x00400000 + 0x00000700 & 0xFFFF);//Program Code Space
-		if(mask == 0x7FFF)return (address & 0x3FF);//Stack
-		if((mask & 0xFFF0) == 0xFFF0){
-			return address;//IO
+		if(mask == 0x0040){
+			return (address - 0x00400000) & 0xFFFF;//Program Code Space
 		}
-		
+		if(mask == 0x1001)return ((address - 0x10010000) + 0x3000) & 0xFFFF;//Stack		
 		return address & 0xFFFF;
 	}
 
@@ -168,16 +179,17 @@ public class ModuleMemoryController implements IModuleMemoryController {
 	 * 
 	 * 
 	 * NEW MEMORY MAP
-	 * 0x0000 -> hardware I/O on/off, time, auto shutdown, memory size,  etc
+	 * 0x0000 -> hardware I/O on/off(1 byte), auto shutdown(1 byte), halt(1 byte), restart(1 byte), time(4 bytes), memory size(4 bytes),
+	 * peripheral (1 byte), is peripheral conneted(1 byte),  etc
 	 * 0x0010 - 0x03FC -> stack 1024-20 code 0x1FFF
 	 * 0x0400 - memory size -> OS, programs and data storage
 	 * IO devices using IBusConectable
-	 * 0x000F0000 -> bus mask Address
-	 * 0xFFFF0000 -> KeyBoard and mouse && Text Monitor
-	 * 0xFFFD0000 -> Color Monitor
-	 * 0xFFFC0000 -> IO Expander
-	 * 0xFFFB0000 -> Floppy Disk
-	 * 0xFFFA0000 -> HardDrive Disk
-	 * 0xFFF90000 - 0xFFF00000 -> IO devices using IBusConectable
+	 * 0x00FF0000 -> bus mask Address
+	 * 0xFF000000 -> HardDrive Disk
+	 * 0xFF010000 -> KeyBoard and mouse && Text Monitor
+	 * 0xFF020000 -> Floppy Disk
+	 * 0xFF030000 -> IO Expander
+	 * 0xFF040000 -> Color Monitor
+	 * 0xFF050000 - 0xFFFF0000 -> IO devices using IBusConectable get (Addreds * 0x00010000) | 0xFF000000
 	 */
 }

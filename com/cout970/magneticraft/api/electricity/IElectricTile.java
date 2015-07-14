@@ -10,10 +10,10 @@ import com.cout970.magneticraft.api.util.VecInt;
 public interface IElectricTile {
 
 	/**
-	 * @args dir the origin point of the called
-	 * if the args are NULL_VECTOR and tier -1 this should always return the conductor.
-	 * the cablecompound can't be empty, it must be null or has at least one element
+	 * @args dir the origin point of the caller
+	 * if the args are NULL_VECTOR this should always return the conductor if the block has one or more.
+	 * the cablecompound can't be empty, it must be null or have at least one element
 	 * @return the compound of Conductors in the block
 	 */
-	public CableCompound getConds(VecInt dir,int Vtier);
+	public CompoundElectricCables getConds(VecInt dir,int Vtier);
 }

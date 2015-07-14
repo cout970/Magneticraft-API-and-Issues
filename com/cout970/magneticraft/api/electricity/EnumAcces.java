@@ -1,5 +1,10 @@
 package com.cout970.magneticraft.api.electricity;
 
+/**
+ * 
+ * @author Cout970
+ *
+ */
 public enum EnumAcces {
 
 	NOTHING(false,false),

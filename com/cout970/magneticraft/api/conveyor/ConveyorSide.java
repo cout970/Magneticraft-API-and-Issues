@@ -8,10 +8,16 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 
 import com.cout970.magneticraft.api.conveyor.IConveyor.BeltInteraction;
+import com.cout970.magneticraft.api.util.MgDirection;
 import com.cout970.magneticraft.api.util.MgUtils;
 import com.cout970.magneticraft.util.Log;
 import com.cout970.magneticraft.util.MgBeltUtils;
 
+/**
+ * 
+ * @author Cout970
+ *
+ */
 public class ConveyorSide {
 
 	public IConveyor parent;
@@ -35,7 +41,7 @@ public class ConveyorSide {
 	public void setSpace(int pos, boolean value) {
 		TileEntity tile = null;
 		if(4+pos >= spaces.length){
-			tile = MgUtils.getTileEntity(parent.getParent(), parent.getDir());
+			tile = getFrontConveyor(parent);
 		}
 		for(int i = 0;i<4;i++){
 			if(i+pos >= spaces.length){
@@ -51,22 +57,22 @@ public class ConveyorSide {
 			IConveyor con = (IConveyor) tile;
 			BeltInteraction iter = BeltInteraction.InterBelt(parent.getDir(), con.getDir());
 			if(iter == IConveyor.BeltInteraction.DIRECT){
-				con.getSideLane(isLeft).spaces[pos] = value;
+				con.getSideLane(isLeft).spaces[pos%16] = value;
 			}else if(iter == IConveyor.BeltInteraction.LEFT_T){
 				if(isLeft){
 					for(int i = 2;i<6;i++)
-						con.getSideLane(false).spaces[i] = value;
+						con.getSideLane(false).spaces[i%16] = value;
 				}else{
 					for(int i = 10;i<14;i++)
-						con.getSideLane(false).spaces[i] = value;
+						con.getSideLane(false).spaces[i%16] = value;
 				}
 			}else if(iter == IConveyor.BeltInteraction.RIGHT_T){
 				if(!isLeft){
 					for(int i = 2;i<6;i++)
-						con.getSideLane(true).spaces[i] = value;
+						con.getSideLane(true).spaces[i%16] = value;
 				}else{
 					for(int i = 10;i<14;i++)
-						con.getSideLane(true).spaces[i] = value;
+						con.getSideLane(true).spaces[i%16] = value;
 				}
 			}
 		}
@@ -75,7 +81,7 @@ public class ConveyorSide {
 	public boolean hasSpace(int pos) {
 		TileEntity tile = null;
 		if(4+pos >= spaces.length){
-			tile = MgUtils.getTileEntity(parent.getParent(), parent.getDir());
+			tile = getFrontConveyor(parent);
 		}
 		for(int i = 0;i<4;i++){
 			if(i+pos >= spaces.length){
@@ -94,23 +100,23 @@ public class ConveyorSide {
 			BeltInteraction iter = BeltInteraction.InterBelt(parent.getDir(), con.getDir());
 			
 			if(iter == IConveyor.BeltInteraction.DIRECT){
-				return !con.getSideLane(isLeft).spaces[pos];
+				return !con.getSideLane(isLeft).spaces[pos%16];
 			}else if(iter == IConveyor.BeltInteraction.LEFT_T){
 				if(isLeft){
 					for(int i = 2;i<6;i++)
-						temp |= con.getSideLane(false).spaces[i];
+						temp |= con.getSideLane(false).spaces[i%16];
 				}else{
 					for(int i = 10;i<14;i++)
-						temp |= con.getSideLane(false).spaces[i];
+						temp |= con.getSideLane(false).spaces[i%16];
 				}
 				return !temp;
 			}else if(iter == IConveyor.BeltInteraction.RIGHT_T){
 				if(!isLeft){
 					for(int i = 2;i<6;i++)
-						temp |= con.getSideLane(true).spaces[i];
+						temp |= con.getSideLane(true).spaces[i%16];
 				}else{
 					for(int i = 10;i<14;i++)
-						temp |= con.getSideLane(true).spaces[i];
+						temp |= con.getSideLane(true).spaces[i%16];
 				}
 				return !temp;
 			}
@@ -153,5 +159,16 @@ public class ConveyorSide {
 				content.add(box);
 			}
 		}
+	}
+	
+	public static TileEntity getFrontConveyor(IConveyor c){
+		TileEntity t = c.getParent();
+		if(c.getOrientation().getLevel() == 1)
+			return MgUtils.getTileEntity(t, c.getDir().toVecInt().add(0, 1, 0));
+		TileEntity retval = MgUtils.getTileEntity(t, c.getDir());
+		if(!MgBeltUtils.isBelt(retval)){
+			retval = MgUtils.getTileEntity(t, c.getDir().toVecInt().add(0, -1, 0));
+		}
+		return retval;
 	}
 }

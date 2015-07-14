@@ -1,8 +1,12 @@
 package com.cout970.magneticraft.api.electricity;
 
 import com.cout970.magneticraft.api.util.MgDirection;
-import com.cout970.magneticraft.util.ConectedTexture;
 
+/**
+ * 
+ * @author Cout970
+ *
+ */
 public enum ConnectionClass {
 	
 	FULL_BLOCK,

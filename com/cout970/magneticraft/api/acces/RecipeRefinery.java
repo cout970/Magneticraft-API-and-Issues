@@ -4,6 +4,11 @@ import net.minecraftforge.fluids.FluidStack;
 
 import com.cout970.magneticraft.api.util.MgUtils;
 
+/**
+ * 
+ * @author Cout970
+ *
+ */
 public class RecipeRefinery {
 	
 	private FluidStack input;
@@ -37,6 +42,10 @@ public class RecipeRefinery {
 
 	public FluidStack getOut2() {
 		return out2;
+	}
+	
+	public String toString(){
+		return "Refinery Recipe, Input: "+input.getLocalizedName()+", Amount:"+input.amount+", Outputs 1: "+out0.getLocalizedName()+", Amount:"+input.amount+", 2: "+out1.getLocalizedName()+", Amount:"+input.amount+", 3: "+out2.getLocalizedName()+", Amount:"+input.amount;
 	}
 	
 	public boolean matches(FluidStack f){

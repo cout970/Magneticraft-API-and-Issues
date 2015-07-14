@@ -2,6 +2,11 @@ package com.cout970.magneticraft.api.util;
 
 import net.minecraft.block.Block;
 
+/**
+ * An Object to store all posible data from a single block
+ * @author Cout970
+ *
+ */
 public class BlockInfo {
 
 	private Block b;
@@ -28,6 +33,10 @@ public class BlockInfo {
 		return b;
 	}
 	
+	/**
+	 * if meta is not used or ignored should be -1
+	 * @return
+	 */
 	public int getMeta(){
 		return meta;
 	}

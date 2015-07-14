@@ -5,6 +5,11 @@ import net.minecraft.tileentity.TileEntity;
 
 import com.cout970.magneticraft.api.util.VecInt;
 
+/**
+ * 
+ * @author Cout970
+ *
+ */
 public interface IElectricConductor {
 
 	//basic energy utility
@@ -18,31 +23,36 @@ public interface IElectricConductor {
 	public double getVoltage();
 	/**
 	 * Used for high voltage cables
-	 * @return 10^Vtier
+	 * @return 10^tier
 	 */
 	public double getVoltageMultiplier();
 	/**
-	 * @return the flow generated when energy pass through
+	 * @return the flow generated when energy pass through, should be constant
 	 */
 	public double getIndScale();
 	/**
-	 * this method should prepare the basic things for the iteration
+	 * 
+	 * @return the inverse of the capacity of the block, voltge capacity, no storage capacity
+	 */
+	public double getInvCapacity();
+	/**
+	 * this method should prepare the basic things for the iteration, like the connexions
 	 */
 	public void recache();
 	/**
-	 * this method balances the energy in the adjacent conductors
+	 * this method balances the energy with the adjacent conductors
 	 */
 	public void iterate();
 	/**
-	 * this method add to the voltage the intensity in amps(I * 0.05 seconds/tick)
+	 * this method add to the voltage the intensity in amps(I * 0.05 seconds/tick * getVoltageMultiplier())
 	 */
 	public void computeVoltage();
 	/**
-	 * @return Intensity that pass through in the last iteration
+	 * @return Intensity that pass through in the last iteration, only for display
 	 */
 	public double getIntensity();
 	/**
-	 * @return the constant of resistance.
+	 * @return the constant of resistance, must be positive and non cero.
 	 */
 	public double getResistance();
 	/**
@@ -81,7 +91,7 @@ public interface IElectricConductor {
 	
 	//cable connections
 	/**
-	 * rest the indexed connexions
+	 * reset the connexions
 	 */
 	public void disconect();
 	
@@ -93,7 +103,7 @@ public interface IElectricConductor {
 	/**
 	 * @return the Indexed connexions established, used to not repeat them.
 	 */
-	public IndexedConnexion[] getConnexions();
+	public IndexedConnection[] getConnections();
 	
 	/**
 	 * @return possibles connections that the conductor can have.
@@ -103,12 +113,18 @@ public interface IElectricConductor {
 	/**
 	 * @return can conect with other conductor, used for microblocks with covers and for non full blocks like solar panels
 	 */
-	public boolean isAbleToConnect(IElectricConductor c, VecInt enumFacing);
+	public boolean isAbleToConnect(IElectricConductor c, VecInt vec);
 	
 	/**
 	 * @return the type of cable
 	 */
 	public ConnectionClass getConnectionClass(VecInt v);
+	
+	/**
+	 * @param con connexion between two conductors
+	 * @return if the energy can flow on this connection
+	 */
+	public boolean canFlowPower(IndexedConnection con);
 	
 	/**
 	 * @return the tier of the conductor, used for high voltage.

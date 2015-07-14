@@ -1,11 +1,13 @@
 package com.cout970.magneticraft.api.util;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.cout970.magneticraft.tileentity.TileConveyorBelt;
+import com.cout970.magneticraft.api.electricity.wires.IElectricPole;
 import com.google.common.base.Objects;
 
 /**
@@ -40,7 +42,15 @@ public class VecInt {
 		this(tile.xCoord, tile.yCoord, tile.zCoord);
 	}
 
-	public static VecInt getConnexion(MgDirection d) {
+	public VecInt(EntityPlayerMP pl) {
+		this(pl.posX, pl.posY, pl.posZ);
+	}
+	
+	public VecInt(NBTTagCompound nbt, String name) {
+		this(nbt.getInteger(name+"_x"), nbt.getInteger(name+"_y"), nbt.getInteger(name+"_z"));
+	}
+
+	public static VecInt fromDirection(MgDirection d) {
 		return new VecInt(d.getOffsetX(), d.getOffsetY(), d.getOffsetZ());
 	}
 	
@@ -132,5 +142,23 @@ public class VecInt {
 
 	public static VecInt load(NBTTagCompound nbt) {
 		return new VecInt(nbt.getInteger("X"),nbt.getInteger("Y"),nbt.getInteger("Z"));
+	}
+
+	public int[] intArray() {
+		return new int[]{x,y,z};
+	}
+
+	public int squareDistance() {
+		return x*x+y*y+z*z;
+	}
+
+	public void save(NBTTagCompound nbt, String name) {
+		nbt.setInteger(name+"_x", x);
+		nbt.setInteger(name+"_y", y);
+		nbt.setInteger(name+"_z", z);
+	}
+
+	public TileEntity getTileEntity(World w) {
+		return w.getTileEntity(x, y, z);
 	}
 }

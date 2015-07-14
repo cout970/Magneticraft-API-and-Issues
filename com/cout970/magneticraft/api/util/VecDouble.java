@@ -1,9 +1,16 @@
 package com.cout970.magneticraft.api.util;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.google.common.base.Objects;
 
+/**
+ * Simple implementation a 3D vector with doubles
+ * @author Cout970
+ *
+ */
 public class VecDouble {
 
 	public static final VecDouble NULL_VECTOR = new VecDouble(0, 0, 0);
@@ -28,6 +35,10 @@ public class VecDouble {
 		this.y = y;
 		this.z = z;
 	}
+	
+	public VecDouble(NBTTagCompound nbt, String name) {
+		this(nbt.getDouble(name+"_x"), nbt.getDouble(name+"_y"), nbt.getDouble(name+"_z"));
+	}
 
 	public VecDouble(double[] ar) {
 		this(ar[0],ar[1],ar[2]);
@@ -37,11 +48,15 @@ public class VecDouble {
 		this(vec.getX(),vec.getY(),vec.getZ());
 	}
 
-	public static VecDouble getConnexion(MgDirection d) {
+	public VecDouble(TileEntity t) {
+		this(t.xCoord, t.yCoord, t.zCoord);
+	}
+
+	public static VecDouble getConnection(MgDirection d) {
 		return new VecDouble(d.getOffsetX(), d.getOffsetY(), d.getOffsetZ());
 	}
 	
-	public static VecDouble getConnexion(ForgeDirection d) {
+	public static VecDouble getConnection(ForgeDirection d) {
 		return new VecDouble(d.offsetX, d.offsetY, d.offsetZ);
 	}
 
@@ -112,5 +127,15 @@ public class VecDouble {
 
 	public VecDouble copy() {
 		return new VecDouble(x,y,z);
+	}
+
+	public double mag() {
+		return Math.sqrt(x*x+y*y+z*z);
+	}
+
+	public void save(NBTTagCompound nbt, String name) {
+		nbt.setDouble(name+"_x", x);
+		nbt.setDouble(name+"_y", y);
+		nbt.setDouble(name+"_z", x);
 	}
 }

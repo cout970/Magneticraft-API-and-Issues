@@ -5,23 +5,32 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import com.cout970.magneticraft.api.util.EnergyConversor;
 import com.cout970.magneticraft.api.util.MgDirection;
 import com.cout970.magneticraft.api.util.MgUtils;
+import com.cout970.magneticraft.api.util.VecInt;
+import com.cout970.magneticraft.util.Log;
 
+/**
+ * 
+ * @author Cout970
+ *
+ */
 public class HeatConductor implements IHeatConductor{
 
+	public static final double SPECIFIC_HEAT = 0.2D;
 	private TileEntity parent;
-	private double temperature = 25;
+	private double temperature = 25;//temperature in celsius degrees
 	private double mass;
 	private double thermalResistance;
 	private double maxHeat;
-	private double[] flow = new double[6];
+	
+	public HeatConductor(TileEntity p, double max){
+		this(p, max, 1000, 0.5D);
+	}
 	
 	public HeatConductor(TileEntity p, double max,double mass){
-		parent = p;
-		maxHeat = max;
-		this.mass = mass;
-		thermalResistance = 0.5d;
+		this(p, max, mass, 0.5D);
 	}
 	
 	public HeatConductor(TileEntity p, double max,double mass, double res){
@@ -38,6 +47,12 @@ public class HeatConductor implements IHeatConductor{
 
 	@Override
 	public double getTemperature() {
+		if(Double.isNaN(temperature)){
+			temperature = 25;
+		}
+		if(temperature < -273.15){
+			temperature = -273.15;
+		}
 		return temperature;
 	}
 
@@ -52,22 +67,23 @@ public class HeatConductor implements IHeatConductor{
 		World w = t.getWorldObj();
 		if(w.isRemote)return;
 		if(this.getTemperature() >= getMaxTemp()){
-			w.setBlock(t.xCoord, t.yCoord, t.zCoord, Blocks.lava);
-			w.notifyBlockOfNeighborChange(t.xCoord, t.yCoord, t.zCoord, Blocks.lava);
+			onBlockOverHeat();
 		}
-		for(MgDirection d : MgDirection.values()){
+		for(MgDirection d : getValidConnections()){
 			TileEntity tile = MgUtils.getTileEntity(t, d);
 			if(tile == null)continue;
-			IHeatConductor h = MgUtils.getHeatCond(tile, d.getVecInt());
-			if(h != null){
-				double diff = this.temperature-h.getTemperature();
-				double resistance = this.thermalResistance+h.getResistance();
-				double k = 50D,s= 0.007;
-				double change = flow[d.ordinal()];
-				flow[d.ordinal()] += (diff- change*resistance*0.01)*s;
-				change += (diff * k)/resistance;
-				this.applyCalories((int)-change);
-				h.applyCalories((int)change);
+			CompoundHeatCables comp = MgUtils.getHeatCond(tile, d.toVecInt());
+			if(comp != null){
+				for(IHeatConductor h : comp.list()){
+					if(h == null)continue;
+					if(h.isAbleToconnect(this, d.opposite().toVecInt()) && this.isAbleToconnect(h, d.toVecInt())){
+						double diff = this.getTemperature()-h.getTemperature();
+						double resistance = this.getResistance()+h.getResistance();
+						double change = ((diff * 0.5D)/resistance)*EnergyConversor.FUELtoCALORIES(1);
+						drainCalories(change);
+						h.applyCalories(change);
+					}
+				}
 			}
 		}
 	}
@@ -78,12 +94,12 @@ public class HeatConductor implements IHeatConductor{
 
 	@Override
 	public void applyCalories(double j) {
-		temperature += j/(getMass());
+		temperature += j/(getMass())*SPECIFIC_HEAT;
 	}
 
 	@Override
 	public void drainCalories(double j) {
-		temperature -= j/(getMass());
+		temperature -= j/(getMass())*SPECIFIC_HEAT;
 	}
 
 	@Override
@@ -110,4 +126,21 @@ public class HeatConductor implements IHeatConductor{
 		return mass;
 	}
 
+	@Override
+	public void onBlockOverHeat() {
+		TileEntity t = getParent();
+		World w = t.getWorldObj();
+		w.setBlock(t.xCoord, t.yCoord, t.zCoord, Blocks.lava);
+		w.notifyBlockOfNeighborChange(t.xCoord, t.yCoord, t.zCoord, Blocks.lava);
+	}
+
+	@Override
+	public MgDirection[] getValidConnections() {
+		return MgDirection.values();
+	}
+
+	@Override
+	public boolean isAbleToconnect(IHeatConductor cond, VecInt dir) {
+		return true;
+	}
 }
