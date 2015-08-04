@@ -2,8 +2,6 @@ package com.cout970.magneticraft.api.kinetic;
 
 import java.util.LinkedList;
 
-import com.cout970.magneticraft.util.Log;
-
 import net.minecraft.world.World;
 
 public class KineticNetwork {

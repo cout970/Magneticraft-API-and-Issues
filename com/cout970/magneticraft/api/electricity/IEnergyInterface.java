@@ -1,6 +1,5 @@
 package com.cout970.magneticraft.api.electricity;
 
-import com.cout970.magneticraft.api.util.MgDirection;
 import com.cout970.magneticraft.api.util.VecInt;
 
 import net.minecraft.tileentity.TileEntity;
@@ -49,6 +48,5 @@ public interface IEnergyInterface{
 	 */
 	public TileEntity getParent();
 
-	public boolean canAcceptEnergy(IndexedConnection f);
-	
+	public boolean canAcceptEnergy(IIndexedConnection f);
 }

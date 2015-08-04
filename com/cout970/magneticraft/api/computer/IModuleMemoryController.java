@@ -2,7 +2,7 @@ package com.cout970.magneticraft.api.computer;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-public interface IModuleMemoryController extends IHardwareModule{
+public interface IModuleMemoryController extends IHardwareComponent{
 
 	public int readWord(int pos);
 	public byte readByte(int pos);

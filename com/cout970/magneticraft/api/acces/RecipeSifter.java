@@ -6,10 +6,10 @@ import net.minecraft.item.ItemStack;
 
 public class RecipeSifter {
 	
-	private ItemStack input;
-	private ItemStack output;
-	private ItemStack extra;
-	private float prob;
+	protected ItemStack input;
+	protected ItemStack output;
+	protected ItemStack extra;
+	protected float prob;
 	
 	public RecipeSifter(ItemStack input, ItemStack output, ItemStack extra, float prob) {
 		this.input = input;

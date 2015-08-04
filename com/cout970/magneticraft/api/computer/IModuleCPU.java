@@ -2,7 +2,7 @@ package com.cout970.magneticraft.api.computer;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-public interface IModuleCPU extends IHardwareModule{
+public interface IModuleCPU extends IHardwareComponent{
 
 	public void iterate();
 	

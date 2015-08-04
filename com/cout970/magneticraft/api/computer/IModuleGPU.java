@@ -1,5 +1,5 @@
 package com.cout970.magneticraft.api.computer;
 
-public interface IModuleGPU extends IHardwareModule{
+public interface IModuleGPU extends IHardwareComponent{
 
 }

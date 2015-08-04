@@ -1,23 +1,13 @@
 package com.cout970.magneticraft.api.heat;
 
-import com.cout970.magneticraft.api.util.MgDirection;
-import com.cout970.magneticraft.api.util.VecInt;
-
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import com.cout970.magneticraft.api.util.IConnectable;
 
 /**
  * 
  * @author Cout970
  *
  */
-public interface IHeatConductor {
-
-	/**
-	 * the tile Entit that has the HeatConductor
-	 * @return
-	 */
-	public TileEntity getParent();
+public interface IHeatConductor extends IConnectable{
 	
 	/**
 	 * 
@@ -41,10 +31,7 @@ public interface IHeatConductor {
 	 */
 	public double getMass();
 	
-	/**
-	 * Move the heat from a block to another
-	 */
-	public void iterate();
+	public double getSpecificHeat();
 	
 	/**
 	 * Add some calories to the block
@@ -65,12 +52,4 @@ public interface IHeatConductor {
 	public double getResistance();
 	
 	public void onBlockOverHeat();
-	
-	public MgDirection[] getValidConnections();
-	
-	public boolean isAbleToconnect(IHeatConductor cond, VecInt dir);
-
-	//save and load data 
-	public void save(NBTTagCompound nbt);
-	public void load(NBTTagCompound nbt);
 }

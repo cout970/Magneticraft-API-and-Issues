@@ -1,8 +1,8 @@
 package com.cout970.magneticraft.api.acces;
 
-import net.minecraft.item.ItemStack;
-
 import com.cout970.magneticraft.api.util.MgUtils;
+
+import net.minecraft.item.ItemStack;
 
 /**
  * 
@@ -11,12 +11,12 @@ import com.cout970.magneticraft.api.util.MgUtils;
  */
 public class RecipeGrinder {
 
-	private ItemStack input;
-	private ItemStack output;
-	private ItemStack output2;
-	private ItemStack output3;
-	private float prob2;
-	private float prob3;
+	protected ItemStack input;
+	protected ItemStack output;
+	protected ItemStack output2;
+	protected ItemStack output3;
+	protected float prob2;
+	protected float prob3;
 
 	public RecipeGrinder(ItemStack input,ItemStack output,ItemStack output2,float prob2,ItemStack output3,float prob3){
 		this.input = input;

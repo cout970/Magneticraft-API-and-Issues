@@ -3,6 +3,10 @@ package com.cout970.magneticraft.api.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cout970.magneticraft.api.computer.IOpticFiber;
+
+import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.init.Blocks;
@@ -13,23 +17,6 @@ import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
-import codechicken.multipart.TMultiPart;
-import codechicken.multipart.TileMultipart;
-
-import com.cout970.magneticraft.api.computer.IOpticFiber;
-import com.cout970.magneticraft.api.electricity.CompoundElectricCables;
-import com.cout970.magneticraft.api.electricity.IElectricMultiPart;
-import com.cout970.magneticraft.api.electricity.IElectricTile;
-import com.cout970.magneticraft.api.electricity.IEnergyInterface;
-import com.cout970.magneticraft.api.electricity.IndexedConnection;
-import com.cout970.magneticraft.api.electricity.compact.InteractionHelper;
-import com.cout970.magneticraft.api.electricity.wires.IElectricPole;
-import com.cout970.magneticraft.api.electricity.wires.ITileElectricPole;
-import com.cout970.magneticraft.api.heat.CompoundHeatCables;
-import com.cout970.magneticraft.api.heat.IHeatConductor;
-import com.cout970.magneticraft.api.heat.IHeatMultipart;
-import com.cout970.magneticraft.api.heat.IHeatTile;
-import com.cout970.magneticraft.api.kinetic.IKineticConductor;
 
 /**
  * 
@@ -39,27 +26,12 @@ import com.cout970.magneticraft.api.kinetic.IKineticConductor;
 public class MgUtils {
 
 	/**
-	 * Checks if a connection is already formed and should not repeat, used for Electric conductors connections 
-	 * @param con
-	 * @param opp
-	 * @return
-	 */
-	public static boolean alreadyContains(IndexedConnection[] con, VecInt opp) {
-		if(con == null)return false;
-		if(opp == null)return false;
-		for(IndexedConnection i : con)
-			if(opp == i.vecDir)return true;
-		return false;
-	}
-
-	/**
 	 * Usefull method to get an adjacent TileEntity
 	 * @param tile
 	 * @param d
 	 * @return
 	 */
 	public static TileEntity getTileEntity(TileEntity tile, VecInt d) {
-		if(tile == null)return null;
 		return tile.getWorldObj().getTileEntity(tile.xCoord+d.getX(), tile.yCoord+d.getY(), tile.zCoord+d.getZ());
 	}
 	
@@ -73,76 +45,6 @@ public class MgUtils {
 		return tile.getWorldObj().getTileEntity(tile.xCoord+d.getOffsetX(), tile.yCoord+d.getOffsetY(), tile.zCoord+d.getOffsetZ());
 	}
 	
-	/**
-	 * Created to implement ForgeMultipart HeatConductors in the future
-	 * @param tile tile entity to get the conductor 
-	 * @param d vector from the method caller
-	 * @return the coductor is exist
-	 */
-	public static CompoundHeatCables getHeatCond(TileEntity tile, VecInt d) {
-		if(tile instanceof IHeatTile)return ((IHeatTile) tile).getHeatCond(d.getOpposite());
-		if(tile instanceof TileMultipart){
-			CompoundHeatCables comp = null;
-			for(TMultiPart m : ((TileMultipart) tile).jPartList()){
-				if(m instanceof IHeatMultipart){
-					if(comp == null){
-						comp = new CompoundHeatCables(((IHeatMultipart) m).getHeatConductor());
-					}else{
-						comp.add(((IHeatMultipart) m).getHeatConductor());
-					}
-				}
-			}
-			return comp;
-		}
-		return null;
-	}
-
-	/**
-	 * Return the CableCompound in a Block, allowing multipart detection
-	 * @param tile
-	 * @param f
-	 * @param tier
-	 * @return
-	 */
-	public static CompoundElectricCables getElectricCond(TileEntity tile, VecInt f, int tier) {
-		if(tile instanceof TileMultipart){
-			CompoundElectricCables cab = null;
-			for(TMultiPart m : ((TileMultipart) tile).jPartList()){
-				if(m instanceof IElectricMultiPart && ((IElectricMultiPart) m).getElectricConductor(tier) != null){
-					if(cab == null){
-						cab = new CompoundElectricCables(((IElectricMultiPart) m).getElectricConductor(tier));
-					}else{
-						cab.add(((IElectricMultiPart) m).getElectricConductor(tier));
-					}
-				}
-			}
-			return cab;
-		}
-		if(tile instanceof IElectricTile)return ((IElectricTile) tile).getConds(f,tier);
-		return null;
-	}
-	
-	/**
-	 * Find a Interface between to energy systems like railcraft change or RF 
-	 * @param t
-	 * @param i
-	 * @param tier
-	 * @return
-	 */
-	public static IEnergyInterface getInterface(TileEntity t,VecInt i,int tier){
-		return InteractionHelper.processTile(t,i, tier);
-	}
-
-	/**
-	 * checks if the tileEntity is a Conductor
-	 * @param tile
-	 * @param tier
-	 * @return
-	 */
-	public static boolean isConductor(TileEntity tile, int tier){
-		return getElectricCond(tile, VecInt.NULL_VECTOR, tier) != null;
-	}
-
 	/**
 	 * Return the TileEntities adjacent to a Blocks
 	 * @param t
@@ -220,18 +122,6 @@ public class MgUtils {
 			if(dir == d)return true;
 		}
 		return false;
-	}
-
-	public static IElectricPole getElectricPole(TileEntity tile) {
-		if(tile instanceof ITileElectricPole){
-			if(((ITileElectricPole) tile).getMainTile() == null)return null;
-			if(((ITileElectricPole) tile).getMainTile() == tile){
-				return ((ITileElectricPole) tile).getPoleConnection();
-			}else{
-				return ((ITileElectricPole) tile).getMainTile().getPoleConnection();
-			}
-		}
-		return null;
 	}
 
 	public static IOpticFiber getOpticFiber(TileEntity tile, MgDirection dir) {

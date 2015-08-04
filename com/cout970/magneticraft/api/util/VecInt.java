@@ -1,14 +1,13 @@
 package com.cout970.magneticraft.api.util;
 
+import com.google.common.base.Objects;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import com.cout970.magneticraft.api.electricity.wires.IElectricPole;
-import com.google.common.base.Objects;
 
 /**
  * This api is similar to BlockCoord in minecraft 1.8

@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
  * @author Cout970
  *
  */
-public interface IModuleDiskDrive extends IHardwareModule{
+public interface IModuleDiskDrive extends IHardwareComponent{
 
 	/**
 	 * called every tick by the tileEntity

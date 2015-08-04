@@ -1,8 +1,8 @@
 package com.cout970.magneticraft.api.acces;
 
-import net.minecraft.item.ItemStack;
-
 import com.cout970.magneticraft.api.util.MgUtils;
+
+import net.minecraft.item.ItemStack;
 
 /**
  * 
@@ -11,12 +11,12 @@ import com.cout970.magneticraft.api.util.MgUtils;
  */
 public class RecipeCrusher {
 
-	private final ItemStack input;
-	private final ItemStack output;
-	private final ItemStack output2;
-	private final ItemStack output3;
-	private float prob2;
-	private float prob3;
+	protected final ItemStack input;
+	protected final ItemStack output;
+	protected final ItemStack output2;
+	protected final ItemStack output3;
+	protected float prob2;
+	protected float prob3;
 	
 	public RecipeCrusher(ItemStack input,ItemStack output,ItemStack output2, float prob1,ItemStack output3,float prob22){
 		this.input = input;

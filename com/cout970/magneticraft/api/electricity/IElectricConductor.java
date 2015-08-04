@@ -1,22 +1,15 @@
 package com.cout970.magneticraft.api.electricity;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-
-import com.cout970.magneticraft.api.util.VecInt;
+import com.cout970.magneticraft.api.util.IConnectable;
 
 /**
  * 
  * @author Cout970
  *
  */
-public interface IElectricConductor {
+public interface IElectricConductor extends IConnectable{
 
 	//basic energy utility
-	/**
-	 * @return the tileEntity that stores the conductor
-	 */
-	public TileEntity getParent();
 	/**
 	 * @return the voltage stored in the conductor
 	 */
@@ -39,10 +32,6 @@ public interface IElectricConductor {
 	 * this method should prepare the basic things for the iteration, like the connexions
 	 */
 	public void recache();
-	/**
-	 * this method balances the energy with the adjacent conductors
-	 */
-	public void iterate();
 	/**
 	 * this method add to the voltage the intensity in amps(I * 0.05 seconds/tick * getVoltageMultiplier())
 	 */
@@ -73,11 +62,6 @@ public interface IElectricConductor {
 	 */
 	public void drainPower(double amps);
 	
-	
-	//save and load data 
-	public void save(NBTTagCompound nbt);
-	public void load(NBTTagCompound nbt);
-	
 	//sync client and server
 	public void setResistence(double d);
 	public void setVoltage(double d);
@@ -103,28 +87,13 @@ public interface IElectricConductor {
 	/**
 	 * @return the Indexed connexions established, used to not repeat them.
 	 */
-	public IndexedConnection[] getConnections();
-	
-	/**
-	 * @return possibles connections that the conductor can have.
-	 */
-	public VecInt[] getValidConnections();
-	
-	/**
-	 * @return can conect with other conductor, used for microblocks with covers and for non full blocks like solar panels
-	 */
-	public boolean isAbleToConnect(IElectricConductor c, VecInt vec);
-	
-	/**
-	 * @return the type of cable
-	 */
-	public ConnectionClass getConnectionClass(VecInt v);
+	public IIndexedConnection[] getConnections();
 	
 	/**
 	 * @param con connexion between two conductors
 	 * @return if the energy can flow on this connection
 	 */
-	public boolean canFlowPower(IndexedConnection con);
+	public boolean canFlowPower(IIndexedConnection con);
 	
 	/**
 	 * @return the tier of the conductor, used for high voltage.

@@ -1,8 +1,8 @@
 package com.cout970.magneticraft.api.acces;
 
-import net.minecraftforge.fluids.FluidStack;
-
 import com.cout970.magneticraft.api.util.MgUtils;
+
+import net.minecraftforge.fluids.FluidStack;
 
 /**
  * 
@@ -11,10 +11,10 @@ import com.cout970.magneticraft.api.util.MgUtils;
  */
 public class RecipeRefinery {
 	
-	private FluidStack input;
-	private FluidStack out0;
-	private FluidStack out1;
-	private FluidStack out2;
+	protected FluidStack input;
+	protected FluidStack out0;
+	protected FluidStack out1;
+	protected FluidStack out2;
 	
 	
 	public RecipeRefinery(FluidStack in,FluidStack o0,FluidStack o1,FluidStack o2){

@@ -4,7 +4,7 @@ import java.io.File;
 
 import net.minecraft.item.ItemStack;
 /**
- * this is an internal class, use instead @IFloppyDisk or @IHardDrive
+ * 
  * @author Cout970
  *
  */
@@ -37,4 +37,13 @@ public interface IStorageDevice {
 	 * @return the number of sector of 128bytes in the disk
 	 */
 	public int getSize(ItemStack i);
+	
+	/**
+	 * @param i device ItemStack
+	 * @return the amount of game ticks to wait to read or write in the disk 
+	 */
+	public int getAccessTime(ItemStack i);
+	
+	public boolean isHardDrive(ItemStack i);
+	public boolean isFloppyDrive(ItemStack i);
 }

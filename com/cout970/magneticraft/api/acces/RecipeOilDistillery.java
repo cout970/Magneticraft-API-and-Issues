@@ -11,8 +11,8 @@ import net.minecraftforge.fluids.FluidStack;
  */
 public class RecipeOilDistillery {
 
-	private FluidStack input,output;//the amount of the fluid is the generation per tick
-	private double cost;
+	protected FluidStack input,output;//the amount of the fluid is the generation per tick
+	protected double cost;
 	
 	public RecipeOilDistillery(FluidStack in, FluidStack out, double cost){
 		input = in;

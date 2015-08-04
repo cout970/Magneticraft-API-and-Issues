@@ -3,14 +3,12 @@ package com.cout970.magneticraft.api.kinetic;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-
 import com.cout970.magneticraft.api.util.MgDirection;
 import com.cout970.magneticraft.api.util.MgUtils;
-import com.cout970.magneticraft.api.util.PathFinder;
 import com.cout970.magneticraft.api.util.VecInt;
-import com.cout970.magneticraft.util.Log;
+
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 public class KineticPathFinder{
 

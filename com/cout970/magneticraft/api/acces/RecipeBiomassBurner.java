@@ -9,9 +9,9 @@ import net.minecraft.item.ItemStack;
  */
 public class RecipeBiomassBurner {
 
-	private final ItemStack fuel;
-	private final int burnTime;
-	private final boolean useNBT;
+	protected final ItemStack fuel;
+	protected final int burnTime;
+	protected final boolean useNBT;
 	
 	public RecipeBiomassBurner(ItemStack a, int b, boolean c){
 		fuel = a;

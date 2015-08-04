@@ -66,6 +66,15 @@ public class EnergyConversor {
 	public static double CALORIEStoFUEL(double cal) {
 		return cal/FUEL_CALORIE;
 	}
+	
+	//FUEL
+	public static double FUELtoW(double cal){
+		return cal*FUEL_J;
+	}
+	
+	public static double WtoFUEL(double w) {
+		return w/FUEL_J;
+	}
 
 	//heat need to boil an amount of water
 	public static double WATERtoSTEAM_HEAT(int water) {

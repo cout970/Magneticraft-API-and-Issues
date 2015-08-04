@@ -14,6 +14,6 @@ public interface IHeatTile {
 	 * @param c
 	 * @return
 	 */
-	public CompoundHeatCables getHeatCond(VecInt c);
+	public IHeatConductor[] getHeatCond(VecInt c);
 
 }

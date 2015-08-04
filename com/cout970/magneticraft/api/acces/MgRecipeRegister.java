@@ -3,11 +3,11 @@ package com.cout970.magneticraft.api.acces;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-
 import com.cout970.magneticraft.api.util.BlockInfo;
 import com.cout970.magneticraft.api.util.ThermopileFuel;
+
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 /**
  * 
@@ -21,12 +21,12 @@ public class MgRecipeRegister {
 	public static List<RecipeGrinder> grinder = new ArrayList<RecipeGrinder>();
 	public static List<RecipeSifter> sifter = new ArrayList<RecipeSifter>();
 	public static List<ThermopileFuel> thermopileSources = new ArrayList<ThermopileFuel>();
-	public static List<IThermopileDecay> thermopileDecais = new ArrayList<IThermopileDecay>();
+	public static List<IThermopileDecay> thermopileDecays = new ArrayList<IThermopileDecay>();
 	public static List<RecipeBiomassBurner> biomassBurner = new ArrayList<RecipeBiomassBurner>();
 	//fluids
 	public static List<RecipeRefinery> refinery = new ArrayList<RecipeRefinery>();
 	public static List<RecipeOilDistillery> oilDistillery = new ArrayList<RecipeOilDistillery>();
-	
+	public static List<RecipePolymerizer> polymerizer = new ArrayList<RecipePolymerizer>();
 	
 	
 	public static boolean registerCrusherRecipe(ItemStack in, ItemStack out0, ItemStack out1, float prob1, ItemStack out2, float prob2){
@@ -102,8 +102,8 @@ public class MgRecipeRegister {
 	 * @return false if the registry fails
 	 */
 	public static boolean addThermopileDecay(IThermopileDecay t){
-		if(t == null || thermopileDecais.contains(t))return false;
-		thermopileDecais.add(t);
+		if(t == null || thermopileDecays.contains(t))return false;
+		thermopileDecays.add(t);
 		return true;
 	}
 
@@ -112,6 +112,16 @@ public class MgRecipeRegister {
 		RecipeSifter a = new RecipeSifter(in, out, extra, prob);
 		if(!sifter.contains(a)){
 			sifter.add(a);
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean registerPolymerizerRecipe(FluidStack fluid, ItemStack in, ItemStack out, double temperature) {
+		if(in == null || out == null || fluid == null)return false;
+		RecipePolymerizer a = new RecipePolymerizer(fluid, in, out, temperature);
+		if(!polymerizer.contains(a)){
+			polymerizer.add(a);
 			return true;
 		}
 		return false;

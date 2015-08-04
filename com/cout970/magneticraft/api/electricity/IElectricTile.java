@@ -15,5 +15,5 @@ public interface IElectricTile {
 	 * the cablecompound can't be empty, it must be null or have at least one element
 	 * @return the compound of Conductors in the block
 	 */
-	public CompoundElectricCables getConds(VecInt dir,int Vtier);
+	public IElectricConductor[] getConds(VecInt dir,int Vtier);
 }

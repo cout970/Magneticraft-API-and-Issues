@@ -1,10 +1,10 @@
 package com.cout970.magneticraft.api.util;
 
+import com.google.common.base.Objects;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import com.google.common.base.Objects;
 
 /**
  * Simple implementation a 3D vector with doubles
