@@ -37,4 +37,5 @@ public interface IConveyorBelt {
 	public TileEntity getParent();
 
 	public Orientation getOrientation();
+	public void onChange();
 }

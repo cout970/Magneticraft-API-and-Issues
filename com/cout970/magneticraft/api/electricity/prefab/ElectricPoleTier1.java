@@ -73,6 +73,14 @@ public class ElectricPoleTier1 implements IElectricPole{
 		if(tier != 0)return false;
 		VecDouble vec = new VecDouble(getParent()).add(new VecDouble(to.getParent()).getOpposite());
 		if(vec.mag() > 16)return false;
+		for(IInterPoleWire i : connections){
+			if(i.vecStart().equals(new VecInt(getParent()))){
+				if(i.vecEnd().equals(new VecInt(to.getParent()))){
+					return false;
+				}
+			}
+		}
+		if(connections.size() > 6)return false;
 		return true;
 	}
 
