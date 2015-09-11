@@ -6,49 +6,47 @@ import com.cout970.magneticraft.api.electricity.IIndexedConnection;
 import com.cout970.magneticraft.api.util.VecInt;
 
 /**
- * 
  * @author Cout970
- *
  */
-public class IndexedConnection implements IIndexedConnection{
-	
-	protected VecInt vecDir;				//direction from the source to the cond or interface
-	protected IElectricConductor source;	//source conductor
-	protected IElectricConductor cond;
-	protected IEnergyInterface inter;
-	protected int index; 					//used by the conductor for current flow
-	
-	public IndexedConnection(IElectricConductor s, VecInt c, IEnergyInterface e, int side) {
-		vecDir = c;
-		inter = e;
-		source = s;
-		this.index = side;
-	}
+public class IndexedConnection implements IIndexedConnection {
 
-	public IndexedConnection(IElectricConductor s, VecInt c, IElectricConductor e, int side) {
-		vecDir = c;
-		cond = e;
-		source = s;
-		this.index = side;
-	}
+    protected VecInt vecDir;                //direction from the source to the cond or interface
+    protected IElectricConductor source;    //source conductor
+    protected IElectricConductor cond;
+    protected IEnergyInterface inter;
+    protected int index;                    //used by the conductor for current flow
 
-	public VecInt getOffset() {
-		return vecDir;
-	}
+    public IndexedConnection(IElectricConductor s, VecInt c, IEnergyInterface e, int side) {
+        vecDir = c;
+        inter = e;
+        source = s;
+        this.index = side;
+    }
 
-	public IElectricConductor getSource() {
-		return source;
-	}
+    public IndexedConnection(IElectricConductor s, VecInt c, IElectricConductor e, int side) {
+        vecDir = c;
+        cond = e;
+        source = s;
+        this.index = side;
+    }
 
-	public IElectricConductor getConductor() {
-		return cond;
-	}
+    public VecInt getOffset() {
+        return vecDir;
+    }
 
-	public IEnergyInterface getEnergyInterface() {
-		return inter;
-	}
+    public IElectricConductor getSource() {
+        return source;
+    }
 
-	public int getIndex() {
-		return index;
-	}
+    public IElectricConductor getConductor() {
+        return cond;
+    }
+
+    public IEnergyInterface getEnergyInterface() {
+        return inter;
+    }
+
+    public int getIndex() {
+        return index;
+    }
 }

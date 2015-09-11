@@ -1,29 +1,29 @@
 package com.cout970.magneticraft.api.conveyor.prefab;
 
-import java.util.Arrays;
-
 import com.cout970.magneticraft.api.conveyor.IHitBoxArray;
 
-public class HitBoxArray implements IHitBoxArray{
+import java.util.Arrays;
 
-	protected boolean[] spaces = new boolean[16];
+public class HitBoxArray implements IHitBoxArray {
 
-	public int size() {
-		return spaces.length;
-	}
+    protected boolean[] spaces = new boolean[16];
 
-	@Override
-	public boolean hasSpace(int pos) {
-		return spaces[pos];
-	}
+    public int size() {
+        return spaces.length;
+    }
 
-	@Override
-	public void setOccupied(int pos, boolean occupied) {
-		spaces[pos] = occupied;
-	}
+    @Override
+    public boolean hasSpace(int pos) {
+        return spaces[pos];
+    }
 
-	@Override
-	public void clear() {
-		Arrays.fill(spaces, false);
-	}
+    @Override
+    public void setOccupied(int pos, boolean occupied) {
+        spaces[pos] = occupied;
+    }
+
+    @Override
+    public void clear() {
+        Arrays.fill(spaces, false);
+    }
 }

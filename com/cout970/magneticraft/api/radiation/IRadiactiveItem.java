@@ -4,22 +4,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * 
  * @author Cout970
- *
  */
 public interface IRadiactiveItem {
-	
-	public static final String NBT_GRAMS_NAME = "gramos";//spanish word fro grams
 
-	public double getGrams(ItemStack itemStack);//amount of radioactive nuclei, correspond to the durability
+    public static final String NBT_GRAMS_NAME = "gramos";//spanish word fro grams
 
-	public void setGrams(ItemStack itemStack, double n);//set durability
+    public double getGrams(ItemStack itemStack);//amount of radioactive nuclei, correspond to the durability
 
-	public double getDecayConstant(ItemStack itemStack);//decay rate
+    public void setGrams(ItemStack itemStack, double n);//set durability
 
-	public double getEnergyPerFision(ItemStack itemStack);
+    public double getDecayConstant(ItemStack itemStack);//decay rate
 
-	public ResourceLocation getResourceLocation();//for reactor representation
+    public double getEnergyPerFision(ItemStack itemStack);
+
+    public ResourceLocation getResourceLocation();//for reactor representation
 
 }

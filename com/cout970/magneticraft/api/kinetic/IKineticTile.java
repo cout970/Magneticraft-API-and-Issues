@@ -4,7 +4,7 @@ import com.cout970.magneticraft.api.util.MgDirection;
 
 public interface IKineticTile {
 
-	public IKineticConductor getKineticConductor(MgDirection dir);
+    public IKineticConductor getKineticConductor(MgDirection dir);
 
-	public MgDirection[] getValidSides();
+    public MgDirection[] getValidSides();
 }

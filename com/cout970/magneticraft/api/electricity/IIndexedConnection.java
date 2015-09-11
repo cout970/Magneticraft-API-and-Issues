@@ -4,9 +4,13 @@ import com.cout970.magneticraft.api.util.VecInt;
 
 public interface IIndexedConnection {
 
-	public VecInt getOffset();
-	public IElectricConductor getSource();
-	public IElectricConductor getConductor();
-	public IEnergyInterface getEnergyInterface();
-	public int getIndex();
+    public VecInt getOffset();
+
+    public IElectricConductor getSource();
+
+    public IElectricConductor getConductor();
+
+    public IEnergyInterface getEnergyInterface();
+
+    public int getIndex();
 }
