@@ -243,6 +243,7 @@ block_sulfur.name=硫块
 zinc_ore.name=锌矿
 pressure_tank.name=压力缸
 crushing_table.name=粉碎台
+ElectricPoleCableConnectionSmall.name=电线杆连接器
 itemGroup.name=magneticraft
 fluid.steam=蒸汽
 fluid.oil=原油
